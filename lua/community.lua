@@ -5,6 +5,8 @@
 ---@type LazySpec
 return {
   "AstroNvim/astrocommunity",
+  { import = "astrocommunity.completion.copilot-lua-cmp" },
+  { import = "astrocommunity.motion.nvim-surround" },
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.docker" },
   { import = "astrocommunity.pack.elixir-phoenix" },
@@ -17,6 +19,5 @@ return {
   { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.pack.xml" },
   { import = "astrocommunity.pack.yaml" },
-  { import = "astrocommunity.completion.copilot-lua-cmp" },
   -- import/override with your plugins folder
 }
