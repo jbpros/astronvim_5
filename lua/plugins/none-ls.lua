@@ -9,8 +9,6 @@ return {
   opts = function(_, config)
     -- config variable is the default configuration table for the setup function call
     --
-    local null_ls = require "null-ls"
-    local u = require "null-ls.utils"
 
     -- Function to check for ESLint config files
     local function has_eslint_config(utils)
