@@ -10,11 +10,32 @@ return {
     -- config variable is the default configuration table for the setup function call
     --
 
+    local get_root = function()
+      ---@type string|nil
+      local root
+
+      -- prefer getting from client
+      local client = require("null-ls.client").get_client()
+      if client then root = client.config.root_dir end
+
+      -- if in named buffer, resolve directly from root_dir
+      if not root then
+        local fname = vim.api.nvim_buf_get_name(0)
+        if fname ~= "" then root = require("null-ls.config").get().root_dir(fname) end
+      end
+
+      -- fall back to cwd
+      local cwd, err_name, err_msg = vim.uv.cwd()
+      assert(cwd, string.format("[Error %s]: %s", err_name, err_msg))
+
+      return root or cwd
+    end
+
     -- Function to check for ESLint config files
-    local function has_eslint_config(utils)
+    local function has_eslint_config(params)
       -- Check for ESLint flat config files (new ESLint 9+ format)
       if
-        utils.root_has_file {
+        params.root_has_file {
           "eslint.config.js",
           "eslint.config.mjs",
           "eslint.config.cjs",
@@ -25,7 +46,7 @@ return {
 
       -- Check for traditional ESLint config files
       if
-        utils.root_has_file {
+        params.root_has_file {
           ".eslintrc",
           ".eslintrc.js",
           ".eslintrc.cjs",
@@ -38,12 +59,14 @@ return {
       end
 
       -- Check package.json for eslint config
-      local package_json = utils.root_has_file "package.json"
-      if package_json then
-        local ok, package_content = pcall(vim.fn.json_decode, vim.fn.readfile(package_json))
-        if ok then
-          -- Only check for the eslintConfig field
-          return package_content.eslintConfig ~= nil
+      local has_package_json = params.root_has_file "package.json"
+      if has_package_json then
+        local package_json_path = get_root() .. "/package.json"
+        local ok, lines = pcall(vim.fn.readfile, package_json_path)
+        if ok and lines then
+          local content_str = table.concat(lines, "\n") -- join lines into one string
+          local ok2, package_json = pcall(vim.fn.json_decode, content_str)
+          if ok2 and package_json then return package_json.eslintConfig ~= nil end
         end
       end
 
