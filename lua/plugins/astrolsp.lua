@@ -18,6 +18,7 @@ return {
     formatting = {
       filter = function(client)
         if client.name == "typescript-tools" then return false end
+        if client.name == "vtsls" then return false end
 
         -- only enable null-ls for javascript files
         -- if vim.bo.filetype == "javascript" then
