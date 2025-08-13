@@ -39,6 +39,8 @@ return {
           "eslint.config.js",
           "eslint.config.mjs",
           "eslint.config.cjs",
+          "eslint.config.mts",
+          "eslint.config.cts",
         }
       then
         return true
@@ -50,6 +52,9 @@ return {
           ".eslintrc",
           ".eslintrc.js",
           ".eslintrc.cjs",
+          ".eslintrc.mjs",
+          ".eslintrc.cts",
+          ".eslintrc.mts",
           ".eslintrc.yaml",
           ".eslintrc.yml",
           ".eslintrc.json",
